@@ -7,6 +7,8 @@
 #include "src/SStream.hpp"
 #include "src/Settings.hpp"
 
+#include <string.h>
+
 using namespace audio_tactile;
 
 
@@ -92,6 +94,10 @@ void OnPwmSequenceEnd() {
 }
 
 void loop() {
+
+    // Handle serial commands
+    HandleSerialCommands();
+
     // Output battery voltage via serial (debugging)
     uint16_t battery = PuckBatteryMonitor.MeasureBatteryVoltage();
     float converted = PuckBatteryMonitor.ConvertBatteryVoltageToFloat(battery);
@@ -127,7 +133,44 @@ void OnBleEvent() {
     }
 }
 
-
+// Add this function to handle serial commands
+void HandleSerialCommands() {
+    static String inputString = "";      // String to hold incoming data
+    bool stringComplete = false;         // Whether the string is complete
+    
+    while (Serial.available()) {
+        char inChar = (char)Serial.read();
+        if (inChar == '\n') {
+            stringComplete = true;
+            break;
+        }
+        inputString += inChar;
+    }
+    
+    if (stringComplete) {
+        // Trim whitespace and convert to lowercase
+        inputString.trim();
+        inputString.toLowerCase();
+        
+        if (inputString == "start") {
+            StartStream();
+            Serial.println("ACK: Stream started");
+        } 
+        else if (inputString == "stop") {
+            StopStream();
+            Serial.println("ACK: Stream stopped");
+        }
+        else if (inputString == "status") {
+            SendStatus();
+        }
+        else {
+            Serial.println("ERR: Unknown command");
+        }
+        
+        inputString = "";  // Clear the string
+        stringComplete = false;
+    }
+}
 
 void StartStream()
 {
