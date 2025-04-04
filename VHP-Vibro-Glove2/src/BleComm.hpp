@@ -91,9 +91,9 @@ namespace audio_tactile {
       Bluefruit.Advertising.setFastTimeout(30);  // Units of seconds.
       Bluefruit.Advertising.start(300);  // Units of seconds.
 
-      Serial.print("BleCom: Advertising as \"");
-      Serial.print("F2Heal-BLE");
-      Serial.println("\"");
+      //Serial.print("BleCom: Advertising as \"");
+      //Serial.print("F2Heal-BLE");
+      //Serial.println("\"");
     }
 
 
