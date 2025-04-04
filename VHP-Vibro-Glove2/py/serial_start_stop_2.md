@@ -1,5 +1,7 @@
 0. Implementation Notes
 
+PySerial Library: Install with pip install pyserial
+
 Baud Rate: Make sure the baud rate in the Python script matches what's set in your Arduino code (default is usually 115200).
 
 Error Handling: The Python script includes basic error handling through the serial responses.
