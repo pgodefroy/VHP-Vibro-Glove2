@@ -10,6 +10,7 @@ status - Requests current status
 Each command should be followed by a newline character (\n).
 
 Implementation Notes
+
 Baud Rate: Make sure the baud rate in the Python script matches what's set in your Arduino code (default is usually 115200).
 
 Error Handling: The Python script includes basic error handling through the serial responses.
