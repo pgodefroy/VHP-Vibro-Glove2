@@ -101,15 +101,15 @@ void loop() {
     // Output battery voltage via serial (debugging)
     uint16_t battery = PuckBatteryMonitor.MeasureBatteryVoltage();
     float converted = PuckBatteryMonitor.ConvertBatteryVoltageToFloat(battery);
-    Serial.print("Battery voltage: ");
-    Serial.println(converted);
+    //Serial.print("Battery voltage: ");
+    //Serial.println(converted);
     delay(120000);    
 }
 
 void LowBatteryWarning() {
     nrf_gpio_pin_set(kLedPinBlue);  
-    Serial.print("Low voltage trigger: ");
-    Serial.println(PuckBatteryMonitor.GetEvent());
+    //Serial.print("Low voltage trigger: ");
+    //Serial.println(PuckBatteryMonitor.GetEvent());
     // "0" event means that battery voltage is below reference voltage (3.5V)
     // "1" event means above.
 }
@@ -117,15 +117,15 @@ void LowBatteryWarning() {
 void OnBleEvent() {
     switch (BleCom.event()) {
     case BleEvent::kConnect:
-	Serial.println("BLE: Connected.");
+	//Serial.println("BLE: Connected.");
 	g_ble_connected = true;
 	break;
     case BleEvent::kDisconnect:
-	Serial.println("BLE: Disconnected.");
+	//Serial.println("BLE: Disconnected.");
 	g_ble_connected = false;
 	break;
     case BleEvent::kInvalidMessage:
-	Serial.println("BLE: Invalid message.");
+	//Serial.println("BLE: Invalid message.");
 	break;
     case BleEvent::kMessageReceived:
 	HandleMessage(BleCom.rx_message());
@@ -198,11 +198,11 @@ void ToggleStream() {
     if(g_running) {
 	g_running = false;    
 	nrf_gpio_pin_clear(kLedPinGreen);    
-	Serial.println("Stream is running. Stopping.");
+	//Serial.println("Stream is running. Stopping.");
 	delete g_stream;
     } else {
 	nrf_gpio_pin_set(kLedPinGreen);
-	Serial.println("Starting Stream.");
+	//Serial.println("Starting Stream.");
 	g_stream = new SStream(g_settings.chan8,
 			       g_settings.samplerate,
 			       g_settings.stimfreq,
@@ -224,7 +224,7 @@ void ToggleStream() {
 }
 
 void SendStatus() {
-    Serial.println("Message: GetStatus.");
+    //Serial.println("Message: GetStatus.");
     uint16_t battery_voltage_uint16 = PuckBatteryMonitor.MeasureBatteryVoltage();
     float battery_voltage_float = PuckBatteryMonitor.ConvertBatteryVoltageToFloat(battery_voltage_uint16);
     
@@ -242,65 +242,65 @@ void HandleMessage(const Message& message) {
     case MessageType::kVolume:
 	message.Read(&g_volume);
 	SetSilence();    
-	Serial.print("Message Volume: ");
-	Serial.println(g_volume);
+	//Serial.print("Message Volume: ");
+	//Serial.println(g_volume);
 	break;
     case MessageType::kGetVolume:
-	Serial.println("Message: GetVolume.");
+	//Serial.println("Message: GetVolume.");
 	BleCom.tx_message().WriteVolume(g_volume);
 	BleCom.SendTxMessage();
 	break;
     case MessageType::kToggle:
-	Serial.println("Message: Toggle.");
+	//Serial.println("Message: Toggle.");
 	ToggleStream();
 	break;
     case MessageType::k8Channel:
 	message.Read(&g_settings.chan8);
-	Serial.print("Message 8 Channel: ");
-	Serial.println(g_settings.chan8);
+	//Serial.print("Message 8 Channel: ");
+	//Serial.println(g_settings.chan8);
 	break;
     case MessageType::kStimFreq:
 	message.Read(&g_settings.stimfreq);
-	Serial.print("Message StimFreq:");
-	Serial.println(g_settings.stimfreq);
+	//Serial.print("Message StimFreq:");
+	//Serial.println(g_settings.stimfreq);
 	break;
     case MessageType::kStimDur:
 	message.Read(&g_settings.stimduration);
-	Serial.print("Message StimDur:");
-	Serial.println(g_settings.stimduration);
+	//Serial.print("Message StimDur:");
+	//Serial.println(g_settings.stimduration);
 	break;
     case MessageType::kCyclePeriod:
 	message.Read(&g_settings.cycleperiod);
-	Serial.print("Message CyclePeriod:");
-	Serial.println(g_settings.cycleperiod);
+	//Serial.print("Message CyclePeriod:");
+	//Serial.println(g_settings.cycleperiod);
 	break;
     case MessageType::kPauzeCyclePeriod:
 	message.Read(&g_settings.pauzecycleperiod);
-	Serial.print("Message PauzeCyclePeriod:");
-	Serial.println(g_settings.pauzecycleperiod);
+	//Serial.print("Message PauzeCyclePeriod:");
+	//Serial.println(g_settings.pauzecycleperiod);
 	break;
     case MessageType::kPauzedCycles:
 	message.Read(&g_settings.pauzedcycles);
-	Serial.print("Message PauzeCycles:");
-	Serial.println(g_settings.pauzedcycles);
+	//Serial.print("Message PauzeCycles:");
+	//Serial.println(g_settings.pauzedcycles);
 	break;
     case MessageType::kJitter:
 	message.Read(&g_settings.jitter);
-	Serial.print("Message Jitter:");
-	Serial.println(g_settings.jitter);
+	//Serial.print("Message Jitter:");
+	//Serial.println(g_settings.jitter);
 	break;
     case MessageType::kSingleChannel:
 	message.Read(&g_settings.single_channel);
-	Serial.print("Message Single Channel:");
-	Serial.println(g_settings.single_channel);
+	//Serial.print("Message Single Channel:");
+	//Serial.println(g_settings.single_channel);
 	break;	
     case MessageType::kTestMode:
 	message.Read(&g_settings.test_mode);
-	Serial.print("Message TestMode:");
-	Serial.println(g_settings.test_mode);
+	//Serial.print("Message TestMode:");
+	//Serial.println(g_settings.test_mode);
 	break;
     case MessageType::kGetSettingsBatch:
-	Serial.println("Message: GetSettings.");
+	//Serial.println("Message: GetSettings.");
 	BleCom.tx_message().WriteSettings(g_settings);
 	BleCom.SendTxMessage();
 	break;
@@ -308,7 +308,7 @@ void HandleMessage(const Message& message) {
 	SendStatus();
 	break;    
     default:
-	Serial.println("Unhandled message.");
+	//Serial.println("Unhandled message.");
 	break;
   }
 }
@@ -317,7 +317,7 @@ void HandleMessage(const Message& message) {
 // stl_vector.h undefined reference to std::__throw_length_error(char const*)
 namespace std {
     void __throw_length_error( char const*e ) {
-	Serial.print("Length Error :"); Serial.println(e);
+	//Serial.print("Length Error :"); Serial.println(e);
 	while (true) {}	
     }
 }
